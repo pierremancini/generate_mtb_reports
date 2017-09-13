@@ -209,7 +209,7 @@ def inject_to_template(template, var, value):
 
 
 def call_cmd(cmd):
-    """Call perl script in vcf2maf container."""
+    """Call system command."""
 
     args = shlex.split(cmd)
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -238,7 +238,7 @@ def __main__():
         secret_config = yaml.load(ymlfile)
     config.update(secret_config)
 
-    
+
     sys.path.append(config['path_to_utils'])
     from python_utils.redcap_utils import get_clinical_data
 
@@ -315,7 +315,6 @@ def __main__():
             raise TypeError
 
         content = inject_to_template(content, tex_variable, value)
-
 
     texfile = sample + '.tex'
     with open(os.path.join(data_folder, texfile), 'w') as texfile:
