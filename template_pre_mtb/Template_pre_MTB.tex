@@ -1,0 +1,259 @@
+\documentclass[10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{pifont}
+\usepackage{graphicx}
+\usepackage{datetime}
+\usepackage{lipsum}
+\usepackage{tabulary}
+
+
+\usepackage[obeyspaces]{url}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\UrlBreaks}{\do\/\do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D\do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N\do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z}
+
+\usepackage{caption}
+
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=10mm,
+ top=20mm,
+ }
+
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy} 
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\nbversion}{0.1}
+\newcommand{\beforetitle}{\vspace*{0.75cm}}
+\newcommand{\aftertitle}{\vspace*{0.4cm}}
+\newcommand{\beforetable}{\vspace*{0.5cm}}
+
+\DeclareCaptionFormat{nonumber}{\raggedright#3}
+
+\begin{document}
+
+\captionsetup{format=nonumber}
+
+\newdateformat{specialdate}{\twodigit{\THEDAY}/\twodigit{\THEMONTH}/\THEYEAR}
+
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{Version \nbversion , \specialdate\today}
+\rfoot{Page \textbf{\thepage} sur \textbf{\pageref{LastPage}}}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1]{bergo_logo.jpg}
+\includegraphics[scale=0.20]{inserm_log.png}
+\includegraphics[scale=1]{HEGP.png}
+\end{center}
+\end{figure}
+
+\begin{center}
+\textbf{\large Etude MULTIPLI (MULTISARC/ACOMPLI)}\\ 
+\textbf{\large \underline{ETUDE SOMATIQUE ET CONSTITUTIONNELLE}}\\
+\bigbreak
+\textbf{\Large RAPPORT DE VALIDATION BIOLOGIQUE PRE-MTB}\\
+\end{center}
+\bigskip
+\begin{itemize}[font=\Large, label=\ding{226}, leftmargin=*, wide = 0pt]
+\item \textbf{\underline{ETUDE SOMATIQUE} : PANEL MULTIPLI (70 gènes) ET TRANSCRIPTOME TUMORAL}\\
+\item \textbf{\underline{ETUDE CONSTITUTIONNELLE} : LISTE DES 56 GENES DE PREDISPOSITION HEREDITAIRES RECOMMANDES PAR L’ACMG}\\
+
+ID-patient: ***ID-patient***\\
+
+
+\section*{ADN} 
+
+Code barre ADN tumoral: ***Code barre ADN tumoral*** \\
+
+Code barre ADN germinal: ***Code barre ADN germinal*** \\
+
+Mode de fixation: ***Mode de fixation***\\
+
+Cellularité tumorale ADN: ***Cellularité tumorale ADN***\\
+
+\section*{ARN}
+
+Code barre ARN tumoral: ***Code barre ARN tumoral*** \\
+
+Cellularité tumorale ARN: ***Cellularité tumorale ARN***\\
+
+Mode de fixation: ***Mode de fixation***\\
+
+
+Type histologique: ***Type histologique***\\
+\newline
+Organe: ***Organe***
+
+\newpage
+
+\item \textbf{ETUDE SOMATIQUE : PANEL MULTIPLI (70 gènes) ET TRANSCRIPTOME TUMORAL}
+
+\begin{enumerate}[leftmargin=*, label=\Roman*/, wide = 0pt]
+
+\item \textbf{\underline{CHARGE MUTATIONNELLE : (nombre de mutations somatiques non synonymes) :}}
+\\
+\\
+***MutationalCharge*** mutations somatiques non synonymes (nombres absolu)\\
+***MutationalChargeMb*** mutations somatiques non synonymes par Megabase\\
+\item \textbf{\underline{VARIATIONS SOMATIQUES (VARIATIONS PONCTUELLES ET INSERTIONS-DELETIONS)}}
+\\
+\begin{itemize} [font=\large, label=\ding{93}, leftmargin=*, wide = 0pt]
+\captionof{table}{VARIATIONS ACTIONNABLES}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{4cm}|}
+\hline
+\scriptsize Gene &\scriptsize TRANSCRIPTS &\scriptsize HGVSc &\scriptsize HGVSp &\scriptsize TYPE &\scriptsize Expression &\scriptsize GENOTYPES &\scriptsize MTBComment\tabularnewline
+\hline
+VARActionable
+\end{tabulary}\\
+
+\captionof{table}{VARIATIONS POTENTIELLEMENT ACTIONNABLES}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{4cm}|}
+\hline
+\scriptsize Gene &\scriptsize TRANSCRIPTS &\scriptsize HGVSc &\scriptsize HGVSp &\scriptsize TYPE &\scriptsize Expression &\scriptsize GENOTYPES &\scriptsize MTBComment\tabularnewline
+\hline
+VARLikelyactionable
+\end{tabulary}\\
+
+\captionof{table}{VARIATIONS DE SIGNIFICATION CLINIQUE INDETERMINEE}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{4cm}|}
+\hline
+\scriptsize Gene &\scriptsize TRANSCRIPTS &\scriptsize HGVSc &\scriptsize HGVSp &\scriptsize TYPE &\scriptsize Expression &\scriptsize GENOTYPES &\scriptsize MTBComment\tabularnewline
+\hline
+VARNotactionable
+\end{tabulary}
+\end{itemize}
+\\
+\beforetitle
+\item \textbf{\underline{VARIATIONS DU NOMBRE DE COPIES (COPY NUMBER VARIANT/CNV)}}
+\aftertitle
+\begin{itemize} [font=\large, label=\ding{93}, leftmargin=*, wide = 0pt]
+\captionof{table}{CNV ACTIONNABLES}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{2cm}|p{9,5cm}|}
+\hline
+\scriptsize Gene &\scriptsize SegSize\_Exon &\scriptsize CopyNb\_Exon &\scriptsize SegStatus\_Exon &\scriptsize MTBComment\tabularnewline
+\hline
+CNVActionable
+\end{tabulary}\\
+
+\captionof{table}{CNV POTENTIELLEMENT ACTIONNABLES}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{2cm}|p{9,5cm}|}
+\hline
+\scriptsize Gene &\scriptsize SegSize\_Exon &\scriptsize CopyNb\_Exon &\scriptsize SegStatus\_Exon &\scriptsize MTBComment\tabularnewline
+\hline
+CNVLikelyactionable
+\end{tabulary}\\
+
+\captionof{table}{CNV D’ACTIONNABILITE INDETERMINEE}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{2cm}|p{9,5cm}|}
+\hline
+\scriptsize Gene &\scriptsize SegSize\_Exon &\scriptsize CopyNb\_Exon &\scriptsize SegStatus\_Exon &\scriptsize MTBComment\tabularnewline
+\hline
+CNVNotactionable
+\end{tabulary}\\
+\end{itemize}
+
+\newpage
+\beforetitle
+\item \textbf{\underline{TRANSCRITS DE FUSION}}
+\aftertitle
+\begin{itemize} [font=\large, label=\ding{93}, leftmargin=*, wide = 0pt]
+\captionof{table}{TRANSCRITS DE FUSION ACTIONNABLES}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{2cm}|p{1.5cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{6cm}|}
+\hline
+\scriptsize FusionGene &\scriptsize KnownTranscript &\scriptsize RegName5p &\scriptsize KnownTranscript &\scriptsize RegName3p &\scriptsize FrameShift &\scriptsize MTBComment\tabularnewline
+ &\scriptsize Strand5p & &\scriptsize Strand3p & &\scriptsize Class3prime & \tabularnewline
+\hline
+FUSActionable
+\end{tabulary}\\
+
+\captionof{table}{TRANSCRITS DE FUSION POTENTIELLEMENT ACTIONNABLES}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{2cm}|p{1.5cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{6cm}|}
+\hline
+\scriptsize FusionGene &\scriptsize KnownTranscript &\scriptsize RegName5p &\scriptsize KnownTranscript &\scriptsize RegName3p &\scriptsize FrameShift &\scriptsize MTBComment\tabularnewline
+ &\scriptsize Strand5p & &\scriptsize Strand3p & &\scriptsize Class3prime & \tabularnewline
+\hline
+FUSLikelyactionable
+\end{tabulary}\\
+
+\captionof{table}{TRANSCRITS DE FUSION D’ACTIONNABILITE INDETERMINEE}
+\begin{tabulary}{\textwidth}{|p{1.5cm}|p{2cm}|p{1.5cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{6cm}|}
+\hline
+\scriptsize FusionGene &\scriptsize KnownTranscript &\scriptsize RegName5p &\scriptsize KnownTranscript &\scriptsize RegName3p &\scriptsize FrameShift &\scriptsize MTBComment\tabularnewline
+ &\scriptsize Strand5p & &\scriptsize Strand3p & &\scriptsize Class3prime & \tabularnewline
+\hline
+FUSNotactionable
+\end{tabulary}\\
+\end{itemize}
+
+\end{enumerate}
+
+\newpage
+\item \textbf{ETUDE CONSTITUTIONNELLE DES 56 GENES DE PREDISPOSITION HEREDITAIRES RECOMMANDES PAR L’ACMG}
+\afteretitle
+
+\begin{enumerate}[leftmargin=*, label=\Roman*/, wide = 0pt]
+\item \textbf{\underline{VARIATIONS PONCTUELLES ET INSERTIONS-DELETIONS}}
+\\
+
+\begin{itemize} [font=\large, label=\ding{93}, leftmargin=*, wide = 0pt]
+\captionof{table}{VARIATIONS PATHOGENES}
+\begin{tabulary}{\textwidth}{|p{1.3cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{4cm}|}
+\hline
+\scriptsize Gene &\scriptsize TRANSCRIPTS &\scriptsize HGVSc &\scriptsize HGVSp &\scriptsize TYPE &\scriptsize Expression &\scriptsize GENOTYPES &\scriptsize MTBComment\tabularnewline
+\hline
+CSTPathogenic
+\end{tabulary}\\
+
+\captionof{table}{VARIATIONS PROBABLEMENT PATHOGENES}
+\begin{tabulary}{\textwidth}{|p{1.3cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{4cm}|}
+\hline
+\scriptsize Gene &\scriptsize TRANSCRIPTS &\scriptsize HGVSc &\scriptsize HGVSp &\scriptsize TYPE &\scriptsize Expression &\scriptsize GENOTYPES &\scriptsize MTBComment\tabularnewline
+\hline
+CSTLikelypathogenic
+\end{tabulary}\\
+
+\captionof{table}{VARIATIONS DE SIGNIFICATION CLINIQUE INDETERMINEE}
+\begin{tabulary}{\textwidth}{|p{1.3cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|p{4cm}|}
+\hline
+\scriptsize Gene &\scriptsize TRANSCRIPTS &\scriptsize HGVSc &\scriptsize HGVSp &\scriptsize TYPE &\scriptsize Expression &\scriptsize GENOTYPES &\scriptsize MTBComment\tabularnewline
+\hline
+CSTUncertainsignificance
+\end{tabulary}\\
+\end{itemize}
+
+\end{enumerate}
+
+\newpage
+
+\begin{center}
+\textbf{\large RAPPORT DE VALIDATION BIOLOGIQUE PRE-MTB}
+\end{center}
+
+\beforetitle
+\item \textbf{ETUDE SOMATIQUE : PANEL MULTIPLI (70 gènes) ET TRANSCRIPTOME TUMORAL}
+\aftertitle
+***ETUDE SOMATIQUE : PANEL MULTIPLI (70 gènes) ET TRANSCRIPTOME TUMORAL***\\
+Validé par: ***somatique valide par***\\
+Le: ***somatique date validation***\\
+ 
+\item \textbf{ETUDE CONSTITUTIONNELLE DES 56 GENES DE PREDISPOSITION HEREDITAIRES RECOMMANDES PAR L’ACMG}
+
+***ETUDE CONSTITUTIONNELLE DES 56 GENES DE PREDISPOSITION HEREDITAIRES RECOMMANDES PAR L’ACMG***\\
+Validé par: ***constit valide par***\\
+Le: ***constit date validation***\\
+\end{itemize}
+
+\end{document}

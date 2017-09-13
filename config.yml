@@ -1,0 +1,7 @@
+db_dir: /home/pmancini/Code/Latex/
+protocol: MULTIPLI
+
+# Script dependency
+path_to_utils: /home/pmancini/Code/
+
+template: template_pre_mtb/Template_pre_MTB.tex
