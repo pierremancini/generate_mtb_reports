@@ -1,4 +1,4 @@
-db_dir: /home/pmancini/Code/Latex/
+db_dir: /home/pmancini/Code/generate_premtb/data/
 protocol: MULTIPLI
 
 # Script dependency

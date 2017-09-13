@@ -17,8 +17,6 @@ import subprocess
 import shlex
 #from collections import OrderedDict
 
-sys.path.append(config['path_to_utils'])
-from python_utils.redcap_utils import get_clinical_data
 
 __author__ = "Yec'han Laizet"
 __version__ = "0.1.0"
@@ -240,6 +238,10 @@ def __main__():
         secret_config = yaml.load(ymlfile)
     config.update(secret_config)
 
+    
+    sys.path.append(config['path_to_utils'])
+    from python_utils.redcap_utils import get_clinical_data
+
 
     #db_dir = "/home/ylaizet/Informatique/genVarXplorer/gvxrestapi/db/SQLite/"
     db_dir = config['db_dir']
@@ -314,7 +316,9 @@ def __main__():
 
         content = inject_to_template(content, tex_variable, value)
 
-    with open(os.path.join(data_folder, 'T2-02.tex'), 'w') as texfile:
+
+    texfile = sample + '.tex'
+    with open(os.path.join(data_folder, texfile), 'w') as texfile:
         texfile.write(content)
 
     # create_pdf() # => fcontion bash
