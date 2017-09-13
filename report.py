@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
 """
 MULTIPLI report module
 """
-
 
 import argparse
 import sqlite3
@@ -18,6 +17,8 @@ import subprocess
 import shlex
 #from collections import OrderedDict
 
+sys.path.append(config['path_to_utils'])
+from python_utils.redcap_utils import get_clinical_data
 
 __author__ = "Yec'han Laizet"
 __version__ = "0.1.0"
@@ -134,6 +135,7 @@ class Report(object):
             table.append(row)
         return table
 
+
     def table_to_tex(self, table, header=None):
         """Function doc.
 
@@ -219,16 +221,13 @@ def call_cmd(cmd):
     print(stdout)
 
 
-
 def get_args():
     """Parse options."""
     opt_parser = argparse.ArgumentParser(description=__doc__)
     opt_parser.add_argument('-c', '--config', default="config.yml", help='config file.')
     opt_parser.add_argument('-s', '--secret', default="secret_config.yml", help='secret config file.')
-    opt_parser.add_argument('-o', '--outfile', default='T2-02.tex', help='Output file.')
+    opt_parser.add_argument('-o', '--outfile', help='If no outfile given, default = sample name')
     return opt_parser.parse_args()
-
-
 
 
 def __main__():
@@ -241,8 +240,6 @@ def __main__():
         secret_config = yaml.load(ymlfile)
     config.update(secret_config)
 
-    sys.path.append(config['path_to_utils'])
-    from python_utils.redcap_utils import get_clinical_data
 
     #db_dir = "/home/ylaizet/Informatique/genVarXplorer/gvxrestapi/db/SQLite/"
     db_dir = config['db_dir']
@@ -250,6 +247,15 @@ def __main__():
 
     sample = "T02-0002-DX-001O"
     report = Report(db_dir, protocol, sample)
+
+
+    # -- File system configuration --
+    if not args.outfile:
+        outfile = sample + '.pdf'
+    else:
+        outfile = args.outfile
+
+    data_folder = 'data'
 
     request_param = {'VAR': {'categories':["Actionable", "Likely actionable", "Not actionable"],
         'columns': ["GeneSymbol", "TRANSCRIPTS", "HGVSc", "HGVSp", "TYPE", "PASSING_ALLELIC_EXP",
@@ -308,8 +314,7 @@ def __main__():
 
         content = inject_to_template(content, tex_variable, value)
 
-
-    with open('T2-02.tex', 'w') as texfile:
+    with open(os.path.join(data_folder, 'T2-02.tex'), 'w') as texfile:
         texfile.write(content)
 
     # create_pdf() # => fcontion bash
@@ -317,7 +322,6 @@ def __main__():
     # pdflatex --file-line-error-style -interaction=batchmode  "%f"
 
     # %f correspond surement au fichier courant dans geany
-
 
 
 if __name__ == "__main__" :
