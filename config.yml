@@ -1,6 +1,10 @@
 db_dir: /home/pmancini/Code/generate_premtb/data/
 protocol: MULTIPLI
 
+
+redcap_api_url: 'http://129.10.20.120/redcap/api/'
+
+
 # Script dependency
 path_to_utils: /home/pmancini/Code/
 

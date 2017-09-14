@@ -12,7 +12,9 @@ import os
 import re
 import sys
 import yaml
-from redcap import Project
+import redcap
+import requests
+import json
 import subprocess
 import shlex
 #from collections import OrderedDict
@@ -224,7 +226,7 @@ def get_args():
     opt_parser = argparse.ArgumentParser(description=__doc__)
     opt_parser.add_argument('-c', '--config', default="config.yml", help='config file.')
     opt_parser.add_argument('-s', '--secret', default="secret_config.yml", help='secret config file.')
-    opt_parser.add_argument('-o', '--outfile', help='If no outfile given, default = sample name')
+    opt_parser.add_argument('-o', '--outfile', help='Do not give extension.')
     return opt_parser.parse_args()
 
 
@@ -247,17 +249,14 @@ def __main__():
     db_dir = config['db_dir']
     protocol = config['protocol']
 
+    patient_id = "T02-0002-DX"
+
     sample = "T02-0002-DX-001O"
+
     report = Report(db_dir, protocol, sample)
 
-
-    # -- File system configuration --
-    if not args.outfile:
-        outfile = sample + '.pdf'
-    else:
-        outfile = args.outfile
-
     data_folder = 'data'
+    outputdir = data_folder
 
     request_param = {'VAR': {'categories':["Actionable", "Likely actionable", "Not actionable"],
         'columns': ["GeneSymbol", "TRANSCRIPTS", "HGVSc", "HGVSp", "TYPE", "PASSING_ALLELIC_EXP",
@@ -292,10 +291,57 @@ def __main__():
     tables['\*\*\*MutationalCharge\*\*\*'] = str(mut_counts)
     tables['\*\*\*MutationalChargeMb\*\*\*'] = "{0:.2f}".format(round(mut_counts/35.0, 2))
 
-    tables['\*\*\*ID-patient\*\*\*'] = "T02-0002-DX"
+    tables['\*\*\*ID-patient\*\*\*'] = patient_id
     tables['\*\*\*Code barre ADN tumoral\*\*\*'] = "B00I1UL"
     tables['\*\*\*Code barre ARN tumoral\*\*\*'] = "B00I1VU"
     tables['\*\*\*Code barre ADN germinal\*\*\*'] = "B00I1UK"
+
+    # Clinical data
+
+
+    #TODO changer la façon d'avoir les données cliniques: il faut utiliser le module à part
+
+    # A utililser pour avoir les metadata de redcap
+    project = redcap.Project(config['redcap_api_url'], config['redcap_key'])
+
+    # Obtenir les clinical data
+    data = {
+        'token': config['redcap_key'],
+        'content': 'record',
+        'format': 'json',
+        'type': 'flat',
+        'records[0]': patient_id,
+        'forms[0]': 'clinical_data',
+        'rawOrLabel': 'raw',
+        'rawOrLabelHeaders': 'raw',
+        'exportCheckboxLabel': 'false',
+        'exportSurveyFields': 'false',
+        'exportDataAccessGroups': 'false',
+        'returnFormat': 'json'
+    }
+
+    r = requests.post(config['redcap_api_url'], data=data)
+
+    response = json.loads(r.text)[0]  # Conversion json -> python
+
+    # ARN
+
+    tables['\*\*\*Cellularité tumorale ADN\*\*\*'] = response['tumorcellularity_adn']
+
+    tables['\*\*\*Type d\'évenement ADN\*\*\*'] = response['tumorpathologyevent_type_adn']
+
+    tables['\*\*\*Mode de fixation ADN\*\*\*'] = response['samplenature_adn']
+
+    # ADN
+
+    tables['\*\*\*Cellularité tumorale ARN\*\*\*'] = response['tumorcellularity_arn']
+
+    tables['\*\*\*Type d\'évenement ARN\*\*\*'] = response['tumorpathologyevent_type_arn']
+
+    tables['\*\*\*Mode de fixation ARN\*\*\*'] = response['samplenature_arn']
+
+    tables['\*\*\*Type histologique\*\*\*'] = response['histotype']
+
 
     with open(config['template'], 'r') as templatefile:
         content = templatefile.read()
@@ -316,13 +362,19 @@ def __main__():
 
         content = inject_to_template(content, tex_variable, value)
 
+    if not args.outfile:
+        texfile = sample + '.tex'
+    else:
+        texfile = args.outfile + '.tex'
+
     texfile = sample + '.tex'
-    with open(os.path.join(data_folder, texfile), 'w') as texfile:
+    texfile_path = os.path.join(data_folder, texfile)
+    with open(texfile_path, 'w') as texfile:
         texfile.write(content)
 
-    # create_pdf() # => fcontion bash
+    # create_pdf() # => fonction bash
 
-    # pdflatex --file-line-error-style -interaction=batchmode  "%f"
+    call_cmd("pdflatex --file-line-error-style -interaction=batchmode -output-directory {} {}".format(outputdir, texfile_path))
 
     # %f correspond surement au fichier courant dans geany
 
