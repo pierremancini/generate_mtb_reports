@@ -297,35 +297,9 @@ def __main__():
     tables['\*\*\*Code barre ADN germinal\*\*\*'] = "B00I1UK"
 
     # Clinical data
-
-
-    #TODO changer la façon d'avoir les données cliniques: il faut utiliser le module à part
-
-    # A utililser pour avoir les metadata de redcap
-    project = redcap.Project(config['redcap_api_url'], config['redcap_key'])
-
-    # Obtenir les clinical data
-    data = {
-        'token': config['redcap_key'],
-        'content': 'record',
-        'format': 'json',
-        'type': 'flat',
-        'records[0]': patient_id,
-        'forms[0]': 'clinical_data',
-        'rawOrLabel': 'raw',
-        'rawOrLabelHeaders': 'raw',
-        'exportCheckboxLabel': 'false',
-        'exportSurveyFields': 'false',
-        'exportDataAccessGroups': 'false',
-        'returnFormat': 'json'
-    }
-
-    r = requests.post(config['redcap_api_url'], data=data)
-
-    response = json.loads(r.text)[0]  # Conversion json -> python
+    response = get_clinical_data(patient_id, config['redcap_api_url'], config['redcap_key'])
 
     # ARN
-
     tables['\*\*\*Cellularité tumorale ADN\*\*\*'] = response['tumorcellularity_adn']
 
     tables['\*\*\*Type d\'évenement ADN\*\*\*'] = response['tumorpathologyevent_type_adn']
@@ -333,7 +307,6 @@ def __main__():
     tables['\*\*\*Mode de fixation ADN\*\*\*'] = response['samplenature_adn']
 
     # ADN
-
     tables['\*\*\*Cellularité tumorale ARN\*\*\*'] = response['tumorcellularity_arn']
 
     tables['\*\*\*Type d\'évenement ARN\*\*\*'] = response['tumorpathologyevent_type_arn']
