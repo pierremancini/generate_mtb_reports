@@ -299,6 +299,10 @@ def __main__():
     # Clinical data
     response = get_clinical_data(patient_id, config['redcap_api_url'], config['redcap_key'])
 
+    tables['\*\*\*Organe\*\*\*'] = response['tumor_type']
+
+    tables['\*\*\*Type histologique\*\*\*'] = response['histotype']
+
     # ARN
     tables['\*\*\*Cellularité tumorale ADN\*\*\*'] = response['tumorcellularity_adn']
 
@@ -312,8 +316,6 @@ def __main__():
     tables['\*\*\*Type d\'évenement ARN\*\*\*'] = response['tumorpathologyevent_type_arn']
 
     tables['\*\*\*Mode de fixation ARN\*\*\*'] = response['samplenature_arn']
-
-    tables['\*\*\*Type histologique\*\*\*'] = response['histotype']
 
 
     with open(config['template'], 'r') as templatefile:
