@@ -210,6 +210,24 @@ def inject_to_template(template, var, value):
     return re.sub(var, value, template)
 
 
+def tex_escape(text):
+    """
+        :param text: a plain text message
+        :return: the message escaped to appear correctly in LaTeX
+    """
+
+    # Ajouter d'autre symboles si nécessaire
+    conversion = {
+        '%': r'\%'
+    }
+
+
+    for key in conversion:
+        text = re.sub(key, conversion[key], text)
+
+    return text
+
+
 def call_cmd(cmd):
     """Call system command."""
 
@@ -309,14 +327,16 @@ def __main__():
     tables['\*\*\*Type histologique\*\*\*'] = response['histotype']
 
     # ARN
-    tables['\*\*\*Cellularité tumorale ADN\*\*\*'] = response['tumorcellularity_adn']
+    tables['\*\*\*Cellularité tumorale ADN\*\*\*'] = tex_escape(response['tumorcellularity_adn'])
+   
 
     tables['\*\*\*Type d\'évenement ADN\*\*\*'] = response['tumorpathologyevent_type_adn']
 
     tables['\*\*\*Mode de fixation ADN\*\*\*'] = response['samplenature_adn']
 
     # ADN
-    tables['\*\*\*Cellularité tumorale ARN\*\*\*'] = response['tumorcellularity_arn']
+    tables['\*\*\*Cellularité tumorale ARN\*\*\*'] = tex_escape(response['tumorcellularity_arn'])
+    print(tables['\*\*\*Cellularité tumorale ARN\*\*\*'])
 
     tables['\*\*\*Type d\'évenement ARN\*\*\*'] = response['tumorpathologyevent_type_arn']
 
