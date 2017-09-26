@@ -224,6 +224,7 @@ def call_cmd(cmd):
 def get_args():
     """Parse options."""
     opt_parser = argparse.ArgumentParser(description=__doc__)
+    opt_parser.add_argument('-id', '--patient-id', )
     opt_parser.add_argument('-c', '--config', default="config.yml", help='config file.')
     opt_parser.add_argument('-s', '--secret', default="secret_config.yml", help='secret config file.')
     opt_parser.add_argument('-o', '--outfile', help='Do not give extension.')
@@ -248,10 +249,11 @@ def __main__():
     #db_dir = "/home/ylaizet/Informatique/genVarXplorer/gvxrestapi/db/SQLite/"
     db_dir = config['db_dir']
     protocol = config['protocol']
+    
+    sample = args.patient_id # "T02-0002-DX-001O"
 
-    patient_id = "T02-0002-DX"
+    patient_id = args.patient_id.rsplit('-', 1)[0] # ['T02-0002-DX', '001O'][0]
 
-    sample = "T02-0002-DX-001O"
 
     report = Report(db_dir, protocol, sample)
 
@@ -299,6 +301,9 @@ def __main__():
     # Clinical data
     response = get_clinical_data(patient_id, config['redcap_api_url'], config['redcap_key'])
 
+    if not response:
+        print('Did not find clinical_data for patient_id: {}'.format(patient_id))
+
     tables['\*\*\*Organe\*\*\*'] = response['tumor_type']
 
     tables['\*\*\*Type histologique\*\*\*'] = response['histotype']
@@ -316,7 +321,6 @@ def __main__():
     tables['\*\*\*Type d\'évenement ARN\*\*\*'] = response['tumorpathologyevent_type_arn']
 
     tables['\*\*\*Mode de fixation ARN\*\*\*'] = response['samplenature_arn']
-
 
     with open(config['template'], 'r') as templatefile:
         content = templatefile.read()
