@@ -302,7 +302,7 @@ def __main__():
         orders = request_param[data_type]['orders']
         left_selector = request_param[data_type]['left_selector']
         for category in request_param[data_type]['categories']:
-            selectors = '"%s" = "%s"' % (left_selector ,category)
+            selectors = '"%s" = "%s"' % (left_selector, category)
             table = report.get_table("_%s" % data_type, columns, selectors, orders)
             tables[data_type + category.replace(' ', '')] = table
             nb_columns[data_type + category.replace(' ', '')] = len(columns)
