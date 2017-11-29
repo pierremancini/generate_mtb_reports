@@ -98,43 +98,49 @@ class Report(object):
         return rows
 
     def get_table(self, dtype_suffix, columns, selectors, orders):
-        """Function doc.
+        """ Get data from SQLite database table.
 
-        Args:
-            param (int): DESCRIPTION
-            param (str): DESCRIPTION
+            For pre-MTB report there is filtering and value maping.
+            If concerned column are not requested filterinf and mapping won't be used.
 
-        Returns:
-            type: DESCRIPTION
         """
         table = []
         rows = self.get_data(dtype_suffix, columns, selectors, orders)
-        for row in rows:
-            row = list(row)
-            if dtype_suffix == "_VAR":
-                if row[1].startswith("NM_"):
-                    row[1] = row[1].split(":")[0]
-                    if "c." in row[1] and "c." in row[2]:
-                        if row[2] != row[1].split(":")[2]:
-                            raise ValueError("TRANSCRIPT %s and cDNA_Change %s do not match!" % (row[1].split(":")[2], row[2]))
-                    if "p." in row[1] and "p." in row[3]:
-                        if row[3] != row[1].split(":")[3]:
-                            raise ValueError("TRANSCRIPT %s and Protein_Change %s do not match!" % (row[1].split(":")[3], row[3]))
-                if row[5] == "1":
-                    row[5] = "Oui"
-                elif row[5] == "0":
-                    row[5] = "Non"
-                if row[6]:
-                    row[6] = ":".join(row[6].split(":")[:-1])
-            if dtype_suffix == "_CNV":
-                row[1] = str(row[1])
-                row[2] = str(row[2])
-            if dtype_suffix == "_FUS":
-                row[2] = str(row[2])
-                row[4] = str(row[4])
-            table.append(row)
-        return table
 
+        for row in rows:
+
+            # info de la ligne avec nom des colonnes en clé
+            dict_row = {columns[i]: row[i] for i in range(len(columns))}
+            try:
+                if dtype_suffix == "_VAR":
+                    if dict_row['TRANSCRIPTS'].startswith("NM_"):
+                        dict_row['TRANSCRIPTS'] = dict_row['TRANSCRIPTS'].split(":")[0]
+                        if "c." in dict_row['TRANSCRIPTS'] and "c." in dict_row['HGVSc']:
+                            if dict_row['HGVSc'] != dict_row['TRANSCRIPTS'].split(":")[2]:
+                                raise ValueError("TRANSCRIPT %s and cDNA_Change %s do not match!" % (dict_row['TRANSCRIPTS'].split(":")[2], dict_row['HGVSc']))
+                        if "p." in dict_row['TRANSCRIPTS'] and "p." in dict_row['HGVSp']:
+                            if dict_row['HGVSp'] != dict_row['TRANSCRIPTS'].split(":")[3]:
+                                raise ValueError("TRANSCRIPT %s and Protein_Change %s do not match!" % (dict_row['TRANSCRIPTS'].split(":")[3], dict_row['HGVSp']))
+                    if dict_row['PASSING_ALLELIC_EXP'] == "1":
+                        dict_row['PASSING_ALLELIC_EXP'] = "Oui"
+                    elif dict_row['PASSING_ALLELIC_EXP'] == "0":
+                        dict_row['PASSING_ALLELIC_EXP'] = "Non"
+                    if dict_row['ALL_GENOTYPES']:
+                        dict_row['ALL_GENOTYPES'] = ":".join(dict_row['ALL_GENOTYPES'].split(":")[:-1])
+                if dtype_suffix == "_CNV":
+                    dict_row['SegSize_Exon'] = str(dict_row['SegSize_Exon'])
+                    dict_row['CopyNb_Exon'] = str(dict_row['CopyNb_Exon'])
+                if dtype_suffix == "_FUS":
+                    dict_row['RegName5p'] = str(dict_row['RegName5p'])
+                    dict_row['RegName3p'] = str(dict_row['RegName3p'])
+            except KeyError:
+                # KeyError is due to the checkings corresponding to wrong type of report
+                # (not pre-MTB report)
+                pass
+
+            table.append(list(dict_row.values()))
+
+        return table
 
     def table_to_tex(self, table, header=None):
         """Function doc.
