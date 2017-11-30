@@ -56,6 +56,7 @@ class Report(object):
                                             table_sql=table_sql,
                                             where_sql=where_sql,
                                             order_sql=order_sql)
+
         return sql_query
 
     def mut_charge(self, suffix="_VAR"):
@@ -114,13 +115,16 @@ class Report(object):
             try:
                 if dtype_suffix == "_VAR":
                     if dict_row['TRANSCRIPTS'].startswith("NM_"):
-                        dict_row['TRANSCRIPTS'] = dict_row['TRANSCRIPTS'].split(":")[0]
+
                         if "c." in dict_row['TRANSCRIPTS'] and "c." in dict_row['HGVSc']:
                             if dict_row['HGVSc'] != dict_row['TRANSCRIPTS'].split(":")[2]:
                                 raise ValueError("TRANSCRIPT %s and cDNA_Change %s do not match!" % (dict_row['TRANSCRIPTS'].split(":")[2], dict_row['HGVSc']))
                         if "p." in dict_row['TRANSCRIPTS'] and "p." in dict_row['HGVSp']:
                             if dict_row['HGVSp'] != dict_row['TRANSCRIPTS'].split(":")[3]:
                                 raise ValueError("TRANSCRIPT %s and Protein_Change %s do not match!" % (dict_row['TRANSCRIPTS'].split(":")[3], dict_row['HGVSp']))
+                        # Si le script est appelé de l'extérieur on gar l'info complète
+                        if __name__ != '__main__':
+                            dict_row['TRANSCRIPTS'] = dict_row
                     if dict_row['PASSING_ALLELIC_EXP'] == "1":
                         dict_row['PASSING_ALLELIC_EXP'] = "Oui"
                     elif dict_row['PASSING_ALLELIC_EXP'] == "0":
