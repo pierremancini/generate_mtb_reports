@@ -16,20 +16,6 @@ from collections import OrderedDict
 from pprint import pprint
 
 
-def write_list_xlsx(filepath, liste):
-
-    # Pas de valeur dupliquées
-    set_list = set(liste)
-    workbook = xlsxwriter.Workbook(filepath)
-    worksheet = workbook.add_worksheet()
-    row = 0
-    for item in set_list:
-        worksheet.write(row, 0, item)
-        row += 1
-
-    workbook.close()
-
-
 if __name__ == "__main__":
 
     args = report.get_args()
@@ -77,24 +63,97 @@ if __name__ == "__main__":
 
     # Découpage de la valeur de la colonne TRANSCRIPTS
     # début : exon : HGVSc : HGVSp
-    transcripts = "NM_000546:exon5:c.517G>A:p.V173M"
-    first, exon, HGVSc, HGVSp = transcripts.split(':')
 
-    header = ''
-    with open('data/MTBreport{}.csv'.format(patient_id), 'w') as f:
-        writer = csv.writer(f, delimiter=',',  quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for dtype in tables:
+        for i in range(len(tables[dtype])):
 
-        # On commence par écrire la charge mutationelle
-        writer.writerow(['Charge mutationelle', charge_mut])
-        writer.writerow([])
+            # transcripts = tables[dtype]['TRANSCRIPTS']
+            try:
+                first, exon, HGVSc, HGVSp = tables[dtype][i]['TRANSCRIPTS'].split(':')
+                # Où faire la convertion TRANSCRIT
+                tables[dtype][i]['TRANSCRIPTS'] = '({}): {} {}'.format(first, HGVSc, HGVSp)
+            except KeyError:
+                pass
 
-        for dtype in tables:
-            writer.writerow([dtype, *request_param[dtype]['columns']])
-            for row in tables[dtype]:
 
-                writer.writerow(['', *row])
+    def write_csv_MTB(csv_path, tables, col_by_dtype):
+        """
+            Write MTB in csv format.
 
+            :param col_by_dtype: ordered dict. {dtype: {'columns': ['col1', 'col2', ...]}}
+            :param tables: Data from SQLite database
+
+        """
+
+        header = ''
+        with open(csv_path, 'w') as f:
+            writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+            # On commence par écrire la charge mutationelle
+            writer.writerow(['Charge mutationelle', charge_mut])
             writer.writerow([])
+
+            for dtype in tables:
+                writer.writerow([dtype, *request_param[dtype]['columns']])
+                for dict_row in tables[dtype]:
+
+                    writer.writerow(['', *dict_row.values()])
+
+                writer.writerow([])
+
+
+    # write_csv_MTB('data/MTBreport{}test.csv'.format(patient_id), tables, request_param)
+
+
+    def write_txt_MTB(txt_path, tables):
+        """
+            Write MTB in text format.
+
+            :param tables: Data from SQLite database
+        """
+
+        with open(txt_path, 'w') as f:
+
+            f.write('Charge mutationnelle: {} variations somatiques non synonymes ({} mutations/ Mb codantes)\n\n'.format(charge_mut, round(charge_mut/35.0, 2)))
+            
+            f.write('Variations somatiques :\n')
+            for row in tables['VAR']:
+                f.write('{} {} / {} / {}\n'.format(row['GeneSymbol'],
+                                                   row['TRANSCRIPTS'],
+                                                   row['MTBConclusion'],
+                                                   row['CTBConclusion']))
+            f.write('\n')
+
+            f.write('CNV:\n')
+            for row in tables['CNV']:
+                f.write('{}: délétion hétérozygote / {} / {}\n'.format(row['GeneSymbol'],
+                                                    row['MTBConclusion'],
+                                                    row['CTBConclusion']))
+            f.write('\n')
+
+
+            print('FUS\n')
+            f.write('Transcrit de fusion:\n')
+            for row in tables['FUS']:
+                f.write('{}: {} / {} / {}\n'.format(row['FusionGene'],
+                                  row['MTBConclusion'],
+                                  row['CTBConclusion'],
+                                  row['FrameShiftClass3prime']))
+            f.write('\n')
+
+            print('CST\n')
+            f.write('Variations constitutionnelles:\n')
+            for row in tables['CST']:
+                f.write('{} {} / {}\n'.format(row['GeneSymbol'],
+                                              row['TRANSCRIPTS'],
+                                              row['MTBConclusion']))
+            f.write('\n')
+
+
+    write_txt_MTB('data/MTBreport{}.txt'.format(patient_id), tables)
 
     # TODO: après copil voir si une colonne hétérozygocie a été ajoutée pour CNV et CST -> [ ]
     #       après copil -> que faire du "Variant associé à une LOH" dans VAR / MTBComment
+
+    # Système de log nécessaire ?
+    # Demander à yechan si on appplique une règles pour affihcier "délétion hétérozygote"

@@ -122,7 +122,7 @@ class Report(object):
                         if "p." in dict_row['TRANSCRIPTS'] and "p." in dict_row['HGVSp']:
                             if dict_row['HGVSp'] != dict_row['TRANSCRIPTS'].split(":")[3]:
                                 raise ValueError("TRANSCRIPT %s and Protein_Change %s do not match!" % (dict_row['TRANSCRIPTS'].split(":")[3], dict_row['HGVSp']))
-                        # Si le script est appelé de l'extérieur on gar l'info complète
+                        # Si le script est appelé de l'extérieur on garde l'info complète
                         if __name__ != '__main__':
                             dict_row['TRANSCRIPTS'] = dict_row
                     if dict_row['PASSING_ALLELIC_EXP'] == "1":
@@ -142,7 +142,11 @@ class Report(object):
                 # (not pre-MTB report)
                 pass
 
-            table.append(list(dict_row.values()))
+            # Si le script est appelé de l'extérieur on garde le nom des colonnes
+            if __name__ != '__main__':
+                table.append(dict_row)
+            else:
+                table.append(list(dict_row.values()))
 
         return table
 
