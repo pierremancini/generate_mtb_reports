@@ -1,14 +1,10 @@
-# Gros titre
+# Generate MTB report
 
-jl
+Module contenant les outils pour générer des reports MTB et pre-MTB.
 
-## Petit titre
+## Exemple d'utilisation
 
-*  Puce
-
-Text 
-
----------------------------------------------------------------------------------------------------
+<nom du site web>/get_report/?patient_id=T02-0002-DX-001O
 
 ## Traitement des nouvelles données génomique
 
