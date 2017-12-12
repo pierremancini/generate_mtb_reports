@@ -277,12 +277,16 @@ def __main__():
     sys.path.append(config['path_to_utils'])
     from python_utils.redcap_utils import get_clinical_data
 
-
     #db_dir = "/home/ylaizet/Informatique/genVarXplorer/gvxrestapi/db/SQLite/"
     db_dir = config['db_dir']
     protocol = config['protocol']
     
     sample = args.patient_id # "T02-0002-DX-001O"
+
+    # Blindage pour facilité le débugage
+    match = re.search(r'^T\d{2}-\d{4}-\D{2}-.{4}$', sample)
+    if not match:
+        raise ValueError('{} has wrong format for patient_id.'.format(sample))
 
     patient_id = args.patient_id.rsplit('-', 1)[0] # ['T02-0002-DX', '001O'][0]
 
@@ -342,7 +346,6 @@ def __main__():
 
     # ARN
     tables['\*\*\*Cellularité tumorale ADN\*\*\*'] = tex_escape(response['tumorcellularity_adn'])
-   
 
     tables['\*\*\*Type d\'évenement ADN\*\*\*'] = response['tumorpathologyevent_type_adn']
 
