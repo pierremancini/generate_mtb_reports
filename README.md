@@ -19,7 +19,7 @@ Le patient_id est transmit dans l'url via GET à la blueprint.
 
 - Dans le fichier config.yml changer la valeur de "path_to_utils" pour pointer vers le module redcap_utils. report.py utilise la fonction get_clinical_data de redcap_utils.
 
-- Créer le fichier secret_config.yml au même niveau que report.py et ajouter la ligne : redcap_key: <api_key>. Avec <api_key> étant la clé api de l'instance de redcap d'où les données clinique seront extraites.
+- Créer le fichier secret_config.yml au même niveau que report.py et ajouter la ligne : redcap_key: <api_key>. Avec <api_key> étant la clé api de l'instance de redcap d'où les données cliniques seront extraites.
 
 - Dans config.yml db_dir pointe vers le dossier contenant la base de données SQLite.
 
