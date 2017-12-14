@@ -248,9 +248,7 @@ def call_cmd(cmd):
     args = shlex.split(cmd)
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         universal_newlines=True, shell=False)
-    stdout, stderr = process.communicate()
-    print(stderr)
-    print(stdout)
+    return process.communicate()
 
 
 def get_args():
