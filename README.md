@@ -21,9 +21,13 @@ Le patient_id est transmit dans l'url via GET à la blueprint.
 
 - Créer le fichier secret_config.yml au même niveau que report.py et ajouter la ligne : `redcap_key: <api_key>`.  Avec `<api_key>` étant la clé api de l'instance de redcap d'où les données cliniques seront extraites.
 
+- Installer les paquets python: pip3 install -r requirements.txt
+
+- Installer latex: sudo apt install texlive-latex-extra
+
 - Dans config.yml db_dir pointe vers le dossier contenant la base de données SQLite.
 
-- Lancer la commande `python master.py` (application remplaçant GVX)
+- Lancer la commande `python3 master.py` (application remplaçant GVX)
 
 - Aller sur l'url https://ib101a:5000.  Si "Hello, master!" est affiché l'application flask est correctement lancée, la blueprint peut être utilisée comme dans l'exemple.
 
