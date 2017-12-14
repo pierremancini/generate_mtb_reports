@@ -390,7 +390,12 @@ def __main__():
 
     # create_pdf() # => fonction bash
 
-    call_cmd("pdflatex --file-line-error-style -interaction=batchmode -output-directory {} {}".format(outputdir, texfile_path))
+    stdout, stderr = call_cmd("pdflatex --file-line-error-style -interaction=batchmode -output-directory {} {}".format(outputdir, texfile_path))
+
+    # L'erreur du script report doit bloqué la suite de la blueprint
+    if stderr:
+        return stderr
+
 
     # %f correspond surement au fichier courant dans geany
 
