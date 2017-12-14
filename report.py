@@ -273,7 +273,7 @@ def __main__():
 
 
     sys.path.append(config['path_to_utils'])
-    from python_utils.redcap_utils import get_clinical_data
+    from redcap_utils import get_clinical_data
 
     #db_dir = "/home/ylaizet/Informatique/genVarXplorer/gvxrestapi/db/SQLite/"
     db_dir = config['db_dir']
@@ -282,6 +282,9 @@ def __main__():
     sample = args.patient_id # "T02-0002-DX-001O"
 
     # Blindage pour facilité le débugage
+    if sample is None:
+        raise TypeError('patient_id missing.')
+
     match = re.search(r'^T\d{2}-\d{4}-\D{2}-.{4}$', sample)
     if not match:
         raise ValueError('{} has wrong format for patient_id.'.format(sample))
