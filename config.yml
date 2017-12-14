@@ -6,6 +6,6 @@ redcap_api_url: 'http://129.10.20.120/redcap/api/'
 
 
 # Script dependency
-path_to_utils: /home/pmancini/Code/
+path_to_utils: /home/pmancini/Code/Redcap_utils/
 
 template: template_pre_mtb/Template_pre_MTB.tex
