@@ -28,7 +28,7 @@ if __name__ == "__main__":
     config.update(secret_config)
 
     sys.path.append(config['path_to_utils'])
-    from python_utils.redcap_utils import get_clinical_data
+    from redcap_utils import get_clinical_data
 
     db_dir = config['db_dir']
     protocol = config['protocol']
@@ -74,32 +74,6 @@ if __name__ == "__main__":
                 tables[dtype][i]['TRANSCRIPTS'] = '({}): {} {}'.format(first, HGVSc, HGVSp)
             except KeyError:
                 pass
-
-
-    def write_csv_MTB(csv_path, tables, col_by_dtype):
-        """
-            Write MTB in csv format.
-
-            :param col_by_dtype: ordered dict. {dtype: {'columns': ['col1', 'col2', ...]}}
-            :param tables: Data from SQLite database
-
-        """
-
-        header = ''
-        with open(csv_path, 'w') as f:
-            writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-            # On commence par écrire la charge mutationelle
-            writer.writerow(['Charge mutationelle', charge_mut])
-            writer.writerow([])
-
-            for dtype in tables:
-                writer.writerow([dtype, *request_param[dtype]['columns']])
-                for dict_row in tables[dtype]:
-
-                    writer.writerow(['', *dict_row.values()])
-
-                writer.writerow([])
 
 
     # write_csv_MTB('data/MTBreport{}test.csv'.format(patient_id), tables, request_param)
@@ -150,10 +124,77 @@ if __name__ == "__main__":
             f.write('\n')
 
 
-    write_txt_MTB('data/MTBreport{}.txt'.format(patient_id), tables)
+    def write_csv_MTB(csv_path, tables, col_by_dtype):
+        """
+            Write MTB in csv format.
 
-    # TODO: après copil voir si une colonne hétérozygocie a été ajoutée pour CNV et CST -> [ ]
-    #       après copil -> que faire du "Variant associé à une LOH" dans VAR / MTBComment
+            :param col_by_dtype: ordered dict. {dtype: {'columns': ['col1', 'col2', ...]}}
+            :param tables: Data from SQLite database
 
-    # Système de log nécessaire ?
-    # Demander à yechan si on appplique une règles pour affihcier "délétion hétérozygote"
+        """
+
+        with open(csv_path, 'w') as f:
+            writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+            # On commence par écrire la charge mutationelle
+            writer.writerow(['Charge mutationelle', charge_mut])
+            writer.writerow([])
+
+            for dtype in tables:
+                writer.writerow([dtype, *request_param[dtype]['columns']])
+                for dict_row in tables[dtype]:
+
+                    writer.writerow(['', *dict_row.values()])
+
+                writer.writerow([])
+
+
+    def write_varvar(csv_path, tables):
+        """
+            Le fichier écrit est un .csv avec pour chaque ligne le
+            nom de la section (VAR, CNV, FUS, CST) dans la marge.
+        """
+
+        with open(csv_path, 'w') as f:
+            writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+            # On commence par écrire la charge mutationelle
+            writer.writerow(['Charge mutationelle', charge_mut])
+            writer.writerow([])
+
+            for dtype in tables:
+                writer.writerow([dtype, *request_param[dtype]['columns']])
+                for dict_row in tables[dtype]:
+
+                    writer.writerow([dtype, *dict_row.values()])
+
+                writer.writerow([])
+
+
+    def write_cellule_unique(csv_path, tables):
+        """
+            Ecrit un .csv.
+
+            Les informations de chaque section sont regroupées dans une cellule.
+            On a une cellule par section.
+        """
+
+        with open(csv_path, 'w') as f:
+            writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+            # On commence par écrire la charge mutationelle
+            writer.writerow(['Charge mutationelle', charge_mut])
+
+            for dtype in tables:
+
+                cell_text = '\t'.join(tables[dtype][0].keys()) + '\n'
+
+                for dict_row in tables[dtype]:
+
+                    cell_text += '\t'.join(dict_row.values()) + '\n'
+
+                writer.writerow([dtype, cell_text])
+
+
+    # write_cellule_unique('data/MTBreport{}_version2.csv'.format(patient_id), tables)
+    write_varvar('data/MTBreport{}_version1.csv'.format(patient_id), tables)
