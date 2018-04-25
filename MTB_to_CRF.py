@@ -60,36 +60,47 @@ def set_logger(logger_name, file_name, level):
     return logger
 
 
-def hasher():
-  return defaultdict(hasher)
+def dict_err_handling(element, list):
+    """
+    Wraping function to handle IndexError when using comprension list.
+
+    Args:
+        element : list's element
+    """
+
+    try:
+        return list[element]
+    except IndexError:
+        return None
 
 
 def write_report(path, tables, charge_mut):
 
+
     # header du fichier de sortie
-    header = ['Patient id',
-            'Occurence',
-            'Charge mutationnelle',
-            'GeneSymbol',
-            'TRANSCRIPT first',
-            'HGVSc',
-            'HGVSp',
-            'MTBConclusion',
-            'CTBConclusion',
-            'GeneSymbol',
-            'MTBConclusion',
-            'MTBConclusion bis',
-            'CTBConclusion',
-            'GeneSymbol',
-            'TRANSCRIPT first',
-            'HGVSc',
-            'HGVSp',
-            'CD_GENOTYPE__THRESH_0_05',
-            'MTBConclusion',
-            'FusionGene',
-            'FrameShiftClass3prime',
-            'MTBConclusion',
-            'CTBConclusion']
+    header_order = [('Patient id', 'Patient id'),
+                ('Occurence', 'Occurence'),
+                ('Charge mutationnelle', 'Charge mutationnelle'),
+                ('VAR1', 'GeneSymbol'),
+                ('VAR2', 'TRANSCRIPT first'),  # first part of transcript
+                ('VAR3', 'HGVSc'),
+                ('VAR4', 'HGVSp'),
+                ('VAR5', 'MTBConclusion'),
+                ('VAR6', 'CTBConclusion'),
+                ('CNV1', 'GeneSymbol'),
+                ('CNV2', 'SegStatus_Exon'),  # CopyNb_Exon -> 0, homo 1, hétéro & SegStatus_Exon
+                ('CNV3', 'MTBConclusion'),
+                ('CNV4', 'CTBConclusion'),
+                ('CST1', 'GeneSymbol'),
+                ('CST2', 'TRANSCRIPT first'),
+                ('CST3', 'HGVSc'),
+                ('CST4', 'HGVSp'),
+                ('CST5', 'CD_GENOTYPE__THRESH_0_05'),  # Mapping à appliquer AA BB -> homozygote, AB -> hétérozygote
+                ('CST6', 'MTBConclusion'),
+                ('FUS1', 'FusionGene'),
+                ('FUS2', 'FrameShiftClass3prime'),
+                ('FUS3', 'MTBConclusion'),
+                ('FUS4', 'CTBConclusion')]
 
     map_col = {
              'Patient id': 'Patient id',
@@ -134,9 +145,7 @@ def write_report(path, tables, charge_mut):
         -> raise error, kill script si le nombre ligne dépasse ?
     - mettre en place un peuplement des lignes du .csv en fonction du nouveau format donnée par
         Delphine.
-
     """
-
     file_matrix = {'Patient id': [],
             'Occurence': [],
             'Charge mutationnelle': [],
@@ -164,30 +173,76 @@ def write_report(path, tables, charge_mut):
 
     for id in tables:
 
-        # Check si il y à une ligne à remplir (même partiellement)
+        print('id: {}'.format(id))
+
+        # Ressemblera à par exmple {VAR: 2, CNV:1, CST:2, FUS: 0}
+        lines_dtype = {'VAR': 0,
+                    'CNV': 0,
+                    'CST': 0,
+                    'FUS': 0}
+
         i = 0
-        while any([tables[id][dtype][i] is not None for dtype in tables[id]]):
+        # Check si il y à une ligne à remplir (même partiellement)
+        while True:
+            empty_line = []
+            # Check si la ligne est vide
+            for dtype in tables[id]:
+                try:
+                    tables[id][dtype][i]
+                except IndexError:
+                    empty_line.append(True)
+                else:
+                    empty_line.append(False)
 
-            for index in map_col:
-                if not index in ['Patient id', 'Occurence', 'Charge mutationnelle']:
-                    dtype = index[:-1]
-                    for i in tables[id][dtype]:
-                        try:
-                            file_matrix[index] = tables[id][map_col[index]][i]
-                        except KeyError as e:
-                            empty_cell = True
-                            print('Empty cell for id: {}, dtype: {}, i: {}'.format(id, map_col[index]), i)
+            if all(empty_line):
+                break
 
-            # Check si toute la ligne est vide  (utiliser un flag pour le check ?)
-            #   si oui on ne met rien
-            #   si non remplissage de la cellue Patient id
+            for dtype in tables[id]:
+                filled_line = []
+                try:
+                    tables[id][dtype][i]
+                except IndexError as e:
+                    # empty line for the part of this dtype
+                    print('Notice : {}'.format(e))
+                    for index in map_col:
+                        if dtype == index[:-1]:
+                            file_matrix[index].append('')
+                else:
+                    for index in map_col:
+                        if dtype == index[:-1]:
+                            try:
+                                if tables[id][dtype][i][map_col[index]]:
+                                    file_matrix[index].append(tables[id][dtype][i][map_col[index]])
+                            except KeyError:
+                                file_matrix[index].append(None)
+                        else:
+                            # On ne regarde pas le bon data type
+                            pass
 
-            file_matrix['Patient id'].append(id) # TODO: split pour avoir le patient_id simplifié
-            file_matrix['Charge mutationnelle'].append(tables[id]['Charge mutationnelle'])
+            # split pour avoir le patient_id simplifié
+            file_matrix['Patient id'].append('-'.join(id.split('-')[:-2]))
+            file_matrix['Charge mutationnelle'].append(charge_mut[id])
+            i += 1
+            file_matrix['Occurence'].append(i)
+
+
+    with open(path, 'w') as f:
+        writer = csv.writer(f, delimiter=',')
+
+        line = ['init']
+        i = 0
+
+        writer.writerow([k[0] for k in header_order])
+
+        while any(j for j in line):
+
+            line = [dict_err_handling(i, file_matrix[k[0]]) for k in header_order]
+            writer.writerow(line)
 
             i += 1
-            file_matrix['Occurence'] = i
 
+            if(i > sum(max_line.values())):
+                raise IndexError('Trop de lignes.')
 
 
 if __name__ == "__main__":
@@ -226,12 +281,13 @@ if __name__ == "__main__":
 
     # Liste des samples dont le sample_id doit être de le fichier de sortie du script
     sample_list = ['T02-0002-DX-001O', 'T01-0001-NP-001S', 'T02-0003-BN-001T']
+    charge_mut = {}
 
     for sample_id in sample_list:
 
         report_instance = report.Report(db_dir, protocol, sample_id)
 
-        charge_mut = report_instance.mut_charge()
+        charge_mut[sample_id] = report_instance.mut_charge()
 
         tables[sample_id] = {}
 
@@ -239,8 +295,8 @@ if __name__ == "__main__":
             columns = request_param[data_type]['columns']
             order = request_param[data_type]['orders']
 
-            # Il est possible qu'une des tables ne soit pas présente. Par exemple pas de table
-            # FUS pour T01-0001.
+            # Il est possible qu'une des tables ne soit pas présente.
+            # Par exemple pas de table FUS pour T01-0001.
             try:
                 table = report_instance.get_table("_%s" % data_type, columns, selector, order)
             except sqlite3.OperationalError as e:
@@ -250,8 +306,6 @@ if __name__ == "__main__":
 
         # Découpage de la valeur de la colonne TRANSCRIPTS
         # début : exon : HGVSc : HGVSp
-
-
         for dtype in tables[sample_id]:
             for i in range(len(tables[sample_id][dtype])):
 
