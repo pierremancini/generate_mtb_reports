@@ -82,7 +82,7 @@ def write_report(path, tables, charge_mut):
                 ('Occurence', 'Occurence'),
                 ('Charge mutationnelle', 'Charge mutationnelle'),
                 ('VAR1', 'GeneSymbol'),
-                ('VAR2', 'TRANSCRIPT first'),  # first part of transcript
+                ('VAR2', 'TRANSCRIPTS First'),  # first part of transcript
                 ('VAR3', 'HGVSc'),
                 ('VAR4', 'HGVSp'),
                 ('VAR5', 'MTBConclusion'),
@@ -92,7 +92,7 @@ def write_report(path, tables, charge_mut):
                 ('CNV3', 'MTBConclusion'),
                 ('CNV4', 'CTBConclusion'),
                 ('CST1', 'GeneSymbol'),
-                ('CST2', 'TRANSCRIPT first'),
+                ('CST2', 'TRANSCRIPTS first'),
                 ('CST3', 'HGVSc'),
                 ('CST4', 'HGVSp'),
                 ('CST5', 'CD_GENOTYPE__THRESH_0_05'),  # Mapping à appliquer AA BB -> homozygote, AB -> hétérozygote
@@ -107,7 +107,7 @@ def write_report(path, tables, charge_mut):
              'Occurence': 'Occurence',
              'Charge mutationnelle': 'Charge mutationnelle',
              'VAR1': 'GeneSymbol',
-             'VAR2': 'TRANSCRIPT first',  # first part of transcript
+             'VAR2': 'TRANSCRIPTS First',  # first part of transcript
              'VAR3': 'HGVSc',
              'VAR4': 'HGVSp',
              'VAR5': 'MTBConclusion',
