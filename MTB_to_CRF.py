@@ -77,6 +77,7 @@ def dict_err_handling(element, list):
 def write_report(path, tables, charge_mut):
 
     # header du fichier de sortie
+    # garder un ordre on utilise une liste comme structure de données
     header_order = [('Patient id', 'Patient id'),
                 ('Occurence', 'Occurence'),
                 ('Charge mutationnelle', 'Charge mutationnelle'),
@@ -132,19 +133,7 @@ def write_report(path, tables, charge_mut):
                 'CST': 10,
                 'FUS': 10}
 
-    # Nombre de colones nécessaire par dtype
-    col_num = {'VAR': 6,
-               'CNV': 4,
-               'CST': 6,
-               'FUS': 4}
-
-    """
-    - faire un fichier qui rassemble les rapports de (potentiellement) plusieurs patient_id.
-    - blinder le nombre max de ligne pas dtype
-        -> raise error, kill script si le nombre ligne dépasse ?
-    - mettre en place un peuplement des lignes du .csv en fonction du nouveau format donnée par
-        Delphine.
-    """
+    # Lignes et colonnes du fichiers
     file_matrix = {'Patient id': [],
             'Occurence': [],
             'Charge mutationnelle': [],
@@ -197,7 +186,6 @@ def write_report(path, tables, charge_mut):
                 break
 
             for dtype in tables[id]:
-                filled_line = []
                 try:
                     tables[id][dtype][i]
                 except IndexError as e:
@@ -224,7 +212,6 @@ def write_report(path, tables, charge_mut):
             i += 1
             file_matrix['Occurence'].append(i)
 
-
     with open(path, 'w') as f:
         writer = csv.writer(f, delimiter=',')
 
@@ -240,9 +227,6 @@ def write_report(path, tables, charge_mut):
 
             i += 1
 
-            if(i > sum(max_line.values())):
-                raise IndexError('Trop de lignes.')
-
 
 if __name__ == "__main__":
 
@@ -256,9 +240,6 @@ if __name__ == "__main__":
     with open(args.secret, 'r') as ymlfile:
         secret_config = yaml.load(ymlfile)
     config.update(secret_config)
-
-    sys.path.append(config['path_to_utils'])
-    from redcap_utils import get_clinical_data  # TODO: Utilisé ?
 
     db_dir = config['db_dir']
     protocol = config['protocol']
@@ -322,6 +303,7 @@ if __name__ == "__main__":
                     pass
 
         # Transformations:
+        # Correspondance index 0 -> homozygote et index 1 -> heterozygote
         CopyNb = ('homozygote', 'heterozygote')
 
         for i in range(len(tables[sample_id]['CNV'])):
