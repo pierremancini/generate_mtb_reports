@@ -76,7 +76,6 @@ def dict_err_handling(element, list):
 
 def write_report(path, tables, charge_mut):
 
-
     # header du fichier de sortie
     header_order = [('Patient id', 'Patient id'),
                 ('Occurence', 'Occurence'),
@@ -266,7 +265,7 @@ if __name__ == "__main__":
 
     request_param = OrderedDict([('VAR', {'columns': ['GeneSymbol', 'TRANSCRIPTS', 'MTBConclusion', 'CTBConclusion'],
                       'orders': 'GeneSymbol ASC'}),
-             ('CNV', {'columns': ['GeneSymbol', 'MTBConclusion', 'CTBConclusion'],
+             ('CNV', {'columns': ['GeneSymbol', 'MTBConclusion', 'CTBConclusion', 'CopyNb_Exon', 'SegStatus_Exon'],
                       'orders': 'GeneSymbol ASC'}),
              ('FUS', {'columns': ['FusionGene', 'MTBConclusion', 'CTBConclusion', 'FrameShiftClass3prime'],
                       'orders': 'FusionGene ASC'}),
@@ -319,5 +318,19 @@ if __name__ == "__main__":
                 # CNV et DUS n'ont pas de champs TRANSCRIPTS
                 except KeyError as e:
                     pass
+
+        # Transformations:
+        CopyNb = ('homozygote', 'heterozygote')
+
+        for i in range(len(tables[sample_id]['CNV'])):
+            if (tables[sample_id]['CNV'][i]['SegStatus_Exon'] == 'Deletion'):
+                tables[sample_id]['CNV'][i]['SegStatus_Exon'] = 'Deletion ' + CopyNb[tables[sample_id]['CNV'][i]['CopyNb_Exon']]
+
+        for i in range(len(tables[sample_id]['CST'])):
+
+            if tables[sample_id]['CST'][i]['CD_GENOTYPE__THRESH_0_05'] == 'AB':
+                tables[sample_id]['CST'][i]['CD_GENOTYPE__THRESH_0_05'] = 'heterozygote'
+            else:
+                tables[sample_id]['CST'][i]['CD_GENOTYPE__THRESH_0_05'] = 'homozygote'
 
     write_report('data/MTBreport_occurence_version.csv', tables, charge_mut)
