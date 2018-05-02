@@ -286,7 +286,9 @@ if __name__ == "__main__":
 
         report_instance = report.Report(db_dir, protocol, sample_id)
 
-        charge_mut[sample_id] = report_instance.mut_charge()
+        c = report_instance.mut_charge()
+        s = '{} variations somatiques non synonymes ({} mutations/Mb codantes)'.format(c, round(c / 35.0, 2))
+        charge_mut[sample_id] = s
 
         tables[sample_id] = {}
 
