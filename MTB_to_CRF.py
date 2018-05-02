@@ -127,11 +127,6 @@ def write_report(path, tables, charge_mut):
              'FUS3': 'MTBConclusion',
              'FUS4': 'CTBConclusion'}
 
-    # Nombre de lignes maximum par dtype
-    max_line = {'VAR': 15,
-                'CNV': 15,
-                'CST': 10,
-                'FUS': 10}
 
     # Lignes et colonnes du fichiers
     file_matrix = {'Patient id': [],
@@ -263,6 +258,12 @@ if __name__ == "__main__":
     sample_list = ['T02-0002-DX-001O', 'T01-0001-NP-001S', 'T02-0003-BN-001T']
     charge_mut = {}
 
+    # Nombre de lignes maximum par dtype
+    max_line = {'VAR': 15,
+                'CNV': 15,
+                'CST': 10,
+                'FUS': 10}
+
     for sample_id in sample_list:
 
         report_instance = report.Report(db_dir, protocol, sample_id)
@@ -289,6 +290,13 @@ if __name__ == "__main__":
         # Découpage de la valeur de la colonne TRANSCRIPTS
         # début : exon : HGVSc : HGVSp
         for dtype in tables[sample_id]:
+
+            # Vérification du nombre de lignes à ne pas dépasser:
+            # (Pour insertion dans le eCRF)
+            if len(tables[sample_id][dtype]) > max_line[dtype]:
+                raise IndexError('Too many {}\'s lines for {}'.format(dtype, sample_id))
+
+
             for i in range(len(tables[sample_id][dtype])):
 
                 # transcripts = tables[dtype]['TRANSCRIPTS']
