@@ -13,11 +13,14 @@ import report
 import yaml
 import sys
 import csv
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict
 import logging
 import sqlite3
+from redcap import Project
+import os
 
 from pprint import pprint
+
 
 def get_args():
     """Parse options."""
@@ -156,8 +159,6 @@ def write_report(path, tables, charge_mut):
 
     for id in tables:
 
-        print('id: {}'.format(id))
-
         # Ressemblera à par exmple {VAR: 2, CNV:1, CST:2, FUS: 0}
         lines_dtype = {'VAR': 0,
                     'CNV': 0,
@@ -185,7 +186,6 @@ def write_report(path, tables, charge_mut):
                     tables[id][dtype][i]
                 except IndexError as e:
                     # empty line for the part of this dtype
-                    print('Notice : {}'.format(e))
                     for index in map_col:
                         if dtype == index[:-1]:
                             file_matrix[index].append('')
@@ -223,6 +223,66 @@ def write_report(path, tables, charge_mut):
             i += 1
 
 
+def get_sqlite_data(query):
+
+    db_file_path = os.path.join(config['db_dir'], config['catalog'])
+
+    conn = sqlite3.connect(db_file_path)
+    c = conn.cursor()
+    rows = [i[0] for i in c.execute(query)]
+    conn.close()
+
+    return rows
+
+
+def sample_id_to_export():
+    """
+        On a trois sources de données:
+            - la base sqlite catalogue
+            - extraction redcap des record avec fusion_done
+            - extraction redcap des record avec not_exported
+    """
+
+    project = Project(config['redcap_api_url'], config['redcap_key'])
+    response = project.export_records(fields=['fusion_done', 'mtb_exported', 'analysisid'])
+
+    not_exported = [record['patient_id'] + '-' + record['analysisid']
+                    for record in response if record['mtb_exported'] != '1']
+
+    fusion_done = [record['patient_id'] + '-' + record['analysisid']
+                   for record in response if record['fusion_done'] == '1']
+
+    # On regarde la base catalogue pour chaque data type
+    query = '''SELECT sample_name FROM samples WHERE "status" = "validated"
+                                                AND "sample_category" = "MULTIPLI"'''
+    sqlite_list = get_sqlite_data(query)
+
+    # DEV - simule l'extraction de données de la base catalogue
+    sqlite_list = [
+        'T02-0002-DX-001O_VAR', 'T02-0002-DX-001O_CST', 'T02-0002-DX-001O_FUS', 'T02-0002-DX-001O_CNV',  # Fusion done dans redcap
+        'T02-0018-BJ-002Q_VAR', 'T02-0018-BJ-002Q_CST', 'T02-0018-BJ-002Q_FUS', 'T02-0018-BJ-002Q_CNV',  # Fusion done redcap
+        'T02-0006-CB-0029_VAR',  # Fusion pas done -> attente des CST, CNV, VAR
+        'T02-0017-JM-002D_VAR', 'T02-0017-JM-002D_CST', 'T02-0017-JM-002D_CNV']  # Fusion done dans redcap -> attente du FUS
+
+    # {samples_id: [dtypes]}
+    samples_dtype = {}
+
+    for sample_id in sqlite_list:
+        dtype = sample_id.split('_')[-1]
+        sample_id = sample_id.split('_')[:-1][0]
+        samples_dtype.setdefault(sample_id, []).append(dtype)
+
+    sample_list = []
+    for id in samples_dtype:
+        if id in not_exported:
+            if len(samples_dtype[id]) == 4 and id in fusion_done:
+                sample_list.append(id)
+            elif len(samples_dtype[id]) == 3 and id not in fusion_done:
+                sample_list.append(id)
+
+    return sample_list
+
+
 if __name__ == "__main__":
 
     args = get_args()
@@ -255,7 +315,8 @@ if __name__ == "__main__":
     tables = {}
 
     # Liste des samples dont le sample_id doit être de le fichier de sortie du script
-    sample_list = ['T02-0002-DX-001O', 'T01-0001-NP-001S', 'T02-0003-BN-001T']
+    sample_list = sample_id_to_export()
+
     charge_mut = {}
 
     # Nombre de lignes maximum par dtype
@@ -296,7 +357,6 @@ if __name__ == "__main__":
             if len(tables[sample_id][dtype]) > max_line[dtype]:
                 raise IndexError('Too many {}\'s lines for {}'.format(dtype, sample_id))
 
-
             for i in range(len(tables[sample_id][dtype])):
 
                 # transcripts = tables[dtype]['TRANSCRIPTS']
@@ -325,4 +385,7 @@ if __name__ == "__main__":
             else:
                 tables[sample_id]['CST'][i]['CD_GENOTYPE__THRESH_0_05'] = 'homozygote'
 
-    write_report('data/MTBreport_occurence_version.csv', tables, charge_mut)
+    write_report('data/MTBreport.csv', tables, charge_mut)
+
+    # TODO: pour le trasnfert du sur le server FTP
+    #  -> Function Timeout en decorator ?
