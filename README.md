@@ -40,5 +40,11 @@ liées à un patient_id.
 
 ## MTB_to_CRF.py
 
-Transmet sous forme de fichier texte des informations d'un rapport MTB au CRF. Ce script utilise
-un partie de report.py.
+Transmet sous forme de fichier texte des informations d'un rapport MTB au CRF. 
+
+
+### Dépendances:
+
+- Une partie de report.py.
+- Module update_redcap_record.py . cf. dépot bitbucket cron_to_redcap
+- Utilitaire ftp.py . cf. dépot bitbucket eCRF
