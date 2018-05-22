@@ -23,10 +23,8 @@ from pprint import pprint
 def get_args():
     """Parse options."""
     opt_parser = argparse.ArgumentParser(description=__doc__)
-    opt_parser.add_argument('-id', '--patient-id', required=False)
     opt_parser.add_argument('-c', '--config', default="config.yml", help='config file.')
     opt_parser.add_argument('-s', '--secret', default="secret_config.yml", help='secret config file.')
-    opt_parser.add_argument('-o', '--outfile', help='Do not give extension.')
     return opt_parser.parse_args()
 
 
