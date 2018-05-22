@@ -13,4 +13,6 @@ crf_host: 'ftps2.isped.u-bordeaux2.fr'
 # - update_redcap_record.py
 path_to_utils: /home/pmancini/Code/Redcap_utils/
 
+path_to_logs: /home/pmancini/Code/generate_mtb_reports/
+
 template: template_pre_mtb/Template_pre_MTB.tex

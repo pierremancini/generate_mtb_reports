@@ -309,7 +309,8 @@ if __name__ == "__main__":
     import update_redcap_record as redcap_record
     import eCRF.ftp
 
-    logger = set_logger(__name__, 'MTB_to_CRF.log', logging.DEBUG)
+    log_path = os.path.join(config['path_to_logs'], __file__.split('.')[0] + '.log')
+    logger = set_logger(__name__, log_path, logging.DEBUG)
 
     db_dir = config['db_dir']
     protocol = config['protocol']
