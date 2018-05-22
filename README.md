@@ -18,10 +18,6 @@ Le patient_id est transmit dans l'url via GET à la blueprint.
 
 - sudo apt install texlive-latex-extra
 
-- Lancer la commande `python3 master.py` (application remplaçant GVX)
-
-- Aller sur l'url http://ib101a:5000.  Si "Hello, master!" est affiché l'application flask est correctement lancée, la blueprint peut être utilisée comme dans la partie Usage.
-
 
 ### Configurations
 
@@ -32,6 +28,10 @@ Le patient_id est transmit dans l'url via GET à la blueprint.
 - Dans config.yml db_dir pointe vers le dossier contenant la base de données SQLite.
 
 ### Usage
+
+- Lancer la commande `python3 master.py` (application remplaçant GVX)
+
+- Aller sur l'url http://ib101a:5000.  Si "Hello, master!" est affiché l'application flask est correctement lancée, la blueprint peut être utilisée comme dans la partie Usage.
 
 - Aller sur l'url: `<nom du site web>/get_report/?patient_id=T02-0002-DX-001O`
 
