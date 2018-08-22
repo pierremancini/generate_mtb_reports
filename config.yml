@@ -7,6 +7,7 @@ redcap_api_url: 'http://129.10.20.120/redcap/api/'
 
 # eCRF
 crf_host: 'ftps2.isped.u-bordeaux2.fr'
+path_crf_file: 'MULTIPLI/IMPORT/Multipli_samples_mtb.csv'
 
 
 # Script dependency:

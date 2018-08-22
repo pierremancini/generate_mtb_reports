@@ -402,13 +402,12 @@ if __name__ == "__main__":
                 tables[sample_id]['CST'][i]['CD_GENOTYPE__THRESH_0_05'] = 'homozygote'
 
     local_path = 'data/MTBreport.csv'
-    path_crf_file = os.path.join('MULTIPLI', 'rapportMTB', os.path.basename(local_path))
 
     write_report(local_path, tables, charge_mut)
 
     connection = {'host': config['crf_host'], 'login': config['login_crf'], 'password': config['password_crf']}
 
-    if eCRF.ftp.upload_file(local_path, path_crf_file, connection):
+    if eCRF.ftp.upload_file(local_path, config['path_crf_file'], connection):
         logger.info('Upload: Done')
 
         sample_list
