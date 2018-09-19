@@ -17,6 +17,7 @@ import logging
 import sqlite3
 from redcap import Project
 import os
+import eCRF_ftp
 
 from pprint import pprint
 
@@ -42,7 +43,7 @@ def set_logger(logger_name, file_name, level):
     # Création du logger
     logger = logging.getLogger(logger_name)
     logger.setLevel(level)
-    eCRF.ftp.logger.setLevel(level)
+    eCRF_ftp.logger.setLevel(level)
 
     # FileHandler
     handler = logging.FileHandler(file_name)
@@ -56,8 +57,8 @@ def set_logger(logger_name, file_name, level):
 
     logger.addHandler(handler)
     logger.addHandler(stream_handler)
-    eCRF.ftp.logger.addHandler(handler)
-    eCRF.ftp.logger.addHandler(stream_handler)
+    eCRF_ftp.logger.addHandler(handler)
+    eCRF_ftp.logger.addHandler(stream_handler)
 
     return logger
 
@@ -307,7 +308,7 @@ if __name__ == "__main__":
 
     sys.path.append(config['path_to_utils'])
     import update_redcap_record as redcap_record
-    import eCRF.ftp
+
 
     log_path = os.path.join(config['path_to_logs'], __file__.split('.')[0] + '.log')
     logger = set_logger(__name__, log_path, logging.DEBUG)
@@ -407,7 +408,7 @@ if __name__ == "__main__":
 
     connection = {'host': config['crf_host'], 'login': config['login_crf'], 'password': config['password_crf']}
 
-    if eCRF.ftp.upload_file(local_path, config['path_crf_file'], connection):
+    if eCRF_ftp.upload_file(local_path, config['path_crf_file'], connection):
         logger.info('Upload: Done')
 
         sample_list
