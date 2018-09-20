@@ -65,7 +65,7 @@ def upload_file(local_path, remote_path, connection, timeout=5, max_tries=2):
 
                         # Copie sur le remote
                         with open(os.path.join(local_path), 'rb') as file:
-                            ftps.storbinary('STOR {}'.format(local_fname), file)
+                            ftps.storbinary('STOR {}'.format(remote_fname), file)
 
                 # Si on a un timeout ça se passe comme prévu.
                 except socket.timeout as e:
