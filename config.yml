@@ -16,4 +16,6 @@ path_to_utils: /home/pmancini/Code/Redcap_utils/
 
 path_to_logs: /home/pmancini/Code/generate_mtb_reports/
 
+path_to_data: /home/pmancini/Code/generate_mtb_reports/data/
+
 template: template_pre_mtb/Template_pre_MTB.tex
