@@ -12,7 +12,11 @@ Le patient_id est transmit dans l'url via GET à la blueprint.
 
 ### Installation
 
-- Télécharger le module redcap_utils versionné dans https://bitbucket.org/bergomultipli/redcap_utils.
+- hg clone ssh://hg@bitbucket.org/bergomultipli/generate_mtb_reports
+
+- hg clone ssh://hg@bitbucket.org/bergomultipli/cron_to_redcap
+
+- cd generate_mtb_reports
 
 - pip3 install -r requirements.txt
 
