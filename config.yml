@@ -7,15 +7,15 @@ redcap_api_url: 'http://129.10.20.120/redcap/api/'
 
 # eCRF
 crf_host: 'ftps2.isped.u-bordeaux2.fr'
-path_crf_file: 'MULTIPLI/IMPORT/Multipli_samples_mtb.csv'
+path_crf_file: 'MULTIPLI/IMPORT/Multipli_samples_mtb_test.csv'
 
 
 # Script dependency:
 # - update_redcap_record.py
-path_to_utils: /home/pmancini/Code/Redcap_utils/
+path_to_utils: '../cron_to_redcap/'
 
-path_to_logs: /home/pmancini/Code/generate_mtb_reports/
+path_to_logs: .
 
-path_to_data: /home/pmancini/Code/generate_mtb_reports/data/
+path_to_data: data/
 
 template: template_pre_mtb/Template_pre_MTB.tex
