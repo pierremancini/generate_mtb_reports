@@ -16,11 +16,13 @@ Le patient_id est transmit dans l'url via GET à la blueprint.
 
 - hg clone ssh://hg@bitbucket.org/bergomultipli/cron_to_redcap
 
-- cd generate_mtb_reports
+- sudo apt install texlive-latex-extra
+
+- sudo apt install python3-pip
 
 - pip3 install -r requirements.txt
 
-- sudo apt install texlive-latex-extra
+- cd generate_mtb_reports
 
 
 ### Configurations
