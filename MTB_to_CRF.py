@@ -402,7 +402,7 @@ if __name__ == "__main__":
             else:
                 tables[sample_id]['CST'][i]['CD_GENOTYPE__THRESH_0_05'] = 'homozygote'
 
-    local_path = 'data/MTBreport.csv'
+    local_path = 'data/' + os.path.basename(config['path_crf_file'])
 
     write_report(local_path, tables, charge_mut)
 
