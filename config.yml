@@ -9,6 +9,7 @@ redcap_api_url: 'http://129.10.20.120/redcap/api/'
 crf_host: 'ftps2.isped.u-bordeaux2.fr'
 path_crf_file: 'MULTIPLI/IMPORT/Multipli_samples_mtb_test.csv'
 
+local_MTB_file: 'data/Multipli_samples_mtb_test.csv'
 
 # Script dependency:
 # - update_redcap_record.py
