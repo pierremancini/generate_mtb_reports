@@ -114,6 +114,10 @@ redcap_key: token de l'API
 
 path_to_log: Chemin vers le fichier de log
 
+Nb: Si un script est utilisé par crontab il faut avoir donné des path absolus dans la configuration.
+
 ### Usage
 
 python3 MTB_to_CRF.py [-c path_to_config] [-s path_to_secret_config]
+
+Nb: Si la commande est appelée par crontab, il faut donner des chemins absolus pour config.yml et secret_config.yml.
