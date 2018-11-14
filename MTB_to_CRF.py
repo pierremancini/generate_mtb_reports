@@ -417,7 +417,7 @@ if __name__ == "__main__":
             patient_id = '-'.join(sample_id.split('-')[:-1])
 
             redcap_record.update(config['redcap_api_url'], config['redcap_key'], patient_id, 'mtb_exported',
-                '1', 'bioinformatic_analysis')
+                '1', 'workflow_state')
 
     else:
         logger.info('Upload: Failed')
