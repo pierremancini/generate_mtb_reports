@@ -91,7 +91,7 @@ La configuration du script MTB_to_CRF.py se fait dans les fichiers secret_config
 
 - Dépendance:
 
-path_to_utils: chemin vers les dépendances [cron_to_redcap](https://bitbucket.org/bergomultipli/cron_to_redcap/src/default/) et [eCRF](https://bitbucket.org/bergomultipli/ecrf/src/default/):
+path_to_utils: chemin vers les dépendances [cron_to_redcap](https://bitbucket.org/bergomultipli/cron_to_redcap/src/default/)
  
 - Bases de données GVX:
 
