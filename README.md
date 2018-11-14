@@ -116,6 +116,10 @@ path_to_log: Chemin vers le fichier de log
 
 Nb: Si un script est utilisé par crontab il faut avoir donné des path absolus dans la configuration.
 
+Pour une configuration rapide sur le serveur ib101a:
+
+`rm config.yml && mv config.prod.yml config.yml`
+
 ### Usage
 
 python3 MTB_to_CRF.py [-c path_to_config] [-s path_to_secret_config]
