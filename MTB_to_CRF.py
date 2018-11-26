@@ -26,6 +26,7 @@ def get_args():
     opt_parser = argparse.ArgumentParser(description=__doc__)
     opt_parser.add_argument('-c', '--config', default="config.yml", help='config file.')
     opt_parser.add_argument('-s', '--secret', default="secret_config.yml", help='secret config file.')
+    opt_parser.add_argument('-d', '--dev', required=False, action='store_true')
     return opt_parser.parse_args()
 
 
@@ -258,11 +259,12 @@ def sample_id_to_export():
     sqlite_list = get_sqlite_data(query)
 
     # DEV - simule l'extraction de données de la base catalogue
-    sqlite_list = [
-        'T02-0002-DX-001O_VAR', 'T02-0002-DX-001O_CST', 'T02-0002-DX-001O_FUS', 'T02-0002-DX-001O_CNV',  # Fusion done dans redcap
-        'T02-0018-BJ-002Q_VAR', 'T02-0018-BJ-002Q_CST', 'T02-0018-BJ-002Q_FUS', 'T02-0018-BJ-002Q_CNV',  # Fusion done redcap
-        'T02-0006-CB-0029_VAR',  # Fusion pas done -> attente des CST, CNV, VAR
-        'T02-0017-JM-002D_VAR', 'T02-0017-JM-002D_CST', 'T02-0017-JM-002D_CNV']  # Fusion done dans redcap -> attente du FUS
+    if args.dev:
+        sqlite_list = [
+            'T02-0002-DX-001O_VAR', 'T02-0002-DX-001O_CST', 'T02-0002-DX-001O_FUS', 'T02-0002-DX-001O_CNV',  # Fusion done dans redcap
+            'T02-0018-BJ-002Q_VAR', 'T02-0018-BJ-002Q_CST', 'T02-0018-BJ-002Q_FUS', 'T02-0018-BJ-002Q_CNV',  # Fusion done redcap
+            'T02-0006-CB-0029_VAR',  # Fusion pas done -> attente des CST, CNV, VAR
+            'T02-0017-JM-002D_VAR', 'T02-0017-JM-002D_CST', 'T02-0017-JM-002D_CNV']  # Fusion done dans redcap -> attente du FUS
 
     # {samples_id: [dtypes]}
     samples_dtype = {}
