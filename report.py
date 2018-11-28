@@ -96,6 +96,7 @@ class Report(object):
         c = conn.cursor()
         rows = list(c.execute(sql))
         conn.close()
+
         return rows
 
     def get_table(self, dtype_suffix, columns, selectors, orders):
@@ -124,7 +125,7 @@ class Report(object):
                                 raise ValueError("TRANSCRIPT %s and Protein_Change %s do not match!" % (dict_row['TRANSCRIPTS'].split(":")[3], dict_row['HGVSp']))
                         # Si le script est appelé de l'extérieur on garde l'info complète
                         if __name__ != '__main__':
-                            dict_row['TRANSCRIPTS'] = dict_row
+                            dict_row['TRANSCRIPTS'] = dict_row['TRANSCRIPTS']
                     if dict_row['PASSING_ALLELIC_EXP'] == "1":
                         dict_row['PASSING_ALLELIC_EXP'] = "Oui"
                     elif dict_row['PASSING_ALLELIC_EXP'] == "0":
