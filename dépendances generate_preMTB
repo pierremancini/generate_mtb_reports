@@ -1,0 +1,6 @@
+pip install flask
+pip3 install python3-yaml
+
+apt install texlive
+
+datetime.sty

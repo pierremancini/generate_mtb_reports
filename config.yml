@@ -3,7 +3,7 @@ protocol: MULTIPLI
 catalog: gvx_samples_catalog.sqlite # Catalog database file
 
 
-redcap_api_url: 'http://129.10.20.120/redcap/api/'
+redcap_api_url: 'http://(ip)/redcap/api/'
 
 # eCRF
 crf_host: 'ftps2.isped.u-bordeaux2.fr'

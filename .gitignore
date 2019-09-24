@@ -1,7 +1,8 @@
-syntax: glob
-
 data/**
-*.pyc
+*.py[cod]
 *~
 secret_config.yml
 *.sublime-*
+.hgignore
+
+*.log

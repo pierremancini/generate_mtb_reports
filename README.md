@@ -1,3 +1,8 @@
+Dépot figé d'un projet réalisé à l'institut Bergonié entre 2016 et 2018.
+
+Pour suivre les évolutions du projet depuis 2018 aller sur le dépot principal :
+https://bitbucket.org/bergomultipli/generate_mtb_reports/src/default/
+
 # Generate MTB report
 
 Module contenant les outils pour générer des reports MTB et pre-MTB.
